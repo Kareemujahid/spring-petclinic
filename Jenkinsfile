@@ -65,5 +65,23 @@ pipeline {
                 }
             }
         }
+        
+        stage('Deploy to AKS') {
+    steps {
+        withCredentials([
+            usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD'),
+            string(credentialsId: 'tenant-id', variable: 'TENANT_ID'),
+            string(credentialsId: 'resource-group', variable: 'RESOURCE_GROUP'),
+            string(credentialsId: 'aks-name', variable: 'AKS_NAME')
+        ]) {
+            sh '''
+            az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+            az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_NAME --overwrite-existing
+            kubectl apply -f k8s/deployment.yaml
+            kubectl apply -f k8s/service.yaml
+            '''
+        }
+    }
+}
     }
 }
