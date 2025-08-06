@@ -45,7 +45,11 @@ pipeline {
 
         stage('Login to ACR') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
+                withCredentials([
+    usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD'),
+    string(credentialsId: 'tenant-id', variable: 'TENANT_ID'),
+    string(credentialsId: 'acr-name', variable: 'ACR_NAME')
+]) {
                     sh '''
                     az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
                     az acr login --name $ACR_NAME
