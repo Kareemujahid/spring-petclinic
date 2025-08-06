@@ -44,19 +44,18 @@ pipeline {
         }
 
         stage('Login to ACR') {
-            steps {
-                withCredentials([
-    usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD'),
-    string(credentialsId: 'tenant-id', variable: 'TENANT_ID'),
-    string(credentialsId: 'acr-name', variable: 'ACR_NAME')
-]) {
-                    sh '''
-                    az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant "bf744b93-bf76-404b-b4f7-2d85d553323d"
-                    az acr login --name $ACR_NAME
-                    '''
-                }
-            }
+    steps {
+        withCredentials([
+            usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD'),
+            string(credentialsId: 'acr-name', variable: 'ACR_NAME')
+        ]) {
+            sh '''
+            az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant "bf744b93-bf76-404b-b4f7-2d85d553323d"
+            az acr login --name $ACR_NAME
+            '''
         }
+    }
+}
 
         stage('Docker Push') {
             steps {
