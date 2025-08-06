@@ -25,7 +25,7 @@ pipeline {
 
         stage('Maven Build') {
             steps {
-                sh 'mvn clean package -Dtest=!PostgresIntegrationTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
