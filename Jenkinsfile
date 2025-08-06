@@ -51,7 +51,7 @@ pipeline {
     string(credentialsId: 'acr-name', variable: 'ACR_NAME')
 ]) {
                     sh '''
-                    az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                    az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant "bf744b93-bf76-404b-b4f7-2d85d553323d"
                     az acr login --name $ACR_NAME
                     '''
                 }
